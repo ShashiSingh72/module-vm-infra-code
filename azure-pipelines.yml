@@ -10,9 +10,11 @@ parameters:
   values: 
   - dev
   - prod
+  - qa
 #     ${{parameters.name(eg.devprod)}}
 stages: 
- - stage: buils
+ - stage: Build
+   condition: eq('${{ parameters.devprod }}', 'dev')
    displayName: Terraforminstall
    jobs:
      - job: Terraforminstall
@@ -37,6 +39,33 @@ stages:
 
        - task: TerraformTask@5
          displayName: Terraformplan
+         inputs:
+           provider: 'azurerm'
+           command: 'plan'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/env/${{parameters.devprod}}'
+           environmentServiceNameAzureRM: 'kashi-dev-app'
+
+# stages: 
+ - stage: Build1
+   condition: eq('${{ parameters.devprod }}', 'prod')
+   displayName: Terraforminstall
+   jobs:
+     - job: Terraforminstall
+       displayName: Terraforminstall
+       steps: 
+
+       - task: TerraformTask@5
+         inputs:
+           provider: 'azurerm'
+           command: 'init'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/env/${{parameters.devprod}}'
+           backendServiceArm: 'kashi-dev-app'
+           backendAzureRmResourceGroupName: 'shashi_rg'
+           backendAzureRmStorageAccountName: 'shashistg01'
+           backendAzureRmContainerName: 'shashicontainer'
+           backendAzureRmKey: '${{parameters.devprod}}.terraform.tfstate'
+
+       - task: TerraformTask@5
          inputs:
            provider: 'azurerm'
            command: 'plan'
