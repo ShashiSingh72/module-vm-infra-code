@@ -1,6 +1,16 @@
 trigger: none
 
 pool: dev-infra-pool
+
+parameters:
+- name: devprod
+  displayName: dev&prod
+  type: string
+  default: prod
+  values: 
+  - dev
+  - prod
+#     ${{parameters.name(eg.devprod)}}
 stages: 
  - stage: buils
    displayName: Terraforminstall
@@ -17,9 +27,9 @@ stages:
          inputs:
            provider: 'azurerm'
            command: 'init'
-           workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/env/${{parameters.devprod}}'
            backendServiceArm: 'kashi-dev-app'
            backendAzureRmResourceGroupName: 'shashi_rg'
            backendAzureRmStorageAccountName: 'shashistg01'
            backendAzureRmContainerName: 'shashicontainer'
-           backendAzureRmKey: 'terraform.tfvars'
+           backendAzureRmKey: '${{parameters.devprod}}.terraform.tfstate'
