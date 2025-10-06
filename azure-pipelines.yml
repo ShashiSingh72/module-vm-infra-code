@@ -24,6 +24,7 @@ stages:
            terraformVersion: 'latest'
 
        - task: TerraformTask@5
+         displayName: Terraforminit
          inputs:
            provider: 'azurerm'
            command: 'init'
@@ -33,3 +34,11 @@ stages:
            backendAzureRmStorageAccountName: 'shashistg01'
            backendAzureRmContainerName: 'shashicontainer'
            backendAzureRmKey: '${{parameters.devprod}}.terraform.tfstate'
+
+       - task: TerraformTask@5
+         displayName: Terraformplan
+         inputs:
+           provider: 'azurerm'
+           command: 'plan'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/env/${{parameters.devprod}}'
+           environmentServiceNameAzureRM: 'kashi-dev-app'
