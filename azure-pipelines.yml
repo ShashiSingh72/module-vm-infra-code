@@ -1,0 +1,14 @@
+trigger: none
+
+pool: dev-infra-pool
+stages: 
+ - stage: buils
+   displayName: Terraforminstall
+   jobs:
+     - job: Terraforminstall
+       displayName: Terraforminstall
+       steps: 
+
+       - task: TerraformInstaller@1
+         inputs:
+           terraformVersion: 'latest'
