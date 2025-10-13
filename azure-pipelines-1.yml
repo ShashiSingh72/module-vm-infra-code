@@ -1,0 +1,24 @@
+trigger: none
+pool: dev-infra-pool
+
+stages: 
+ - stage: Terraform_install
+   jobs: 
+   - job: Terraforminstall
+     steps: 
+     - task: TerraformInstaller@1
+       inputs:
+         terraformVersion: 'latest'
+ - stage: 
+   jobs: 
+   - job: 
+     steps: 
+     - task: TerraformTask@5
+       inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'kashi-dev-app'
+        backendAzurermResourceGroupName: 'shashi_rg'
+        backendAzurermStorageAccountName: 'shashistg01'
+        backendAzurermContainerName: 'shashicontainer'
+        backendAzurermKey: 'terraform.tfstate'
